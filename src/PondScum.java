@@ -7,36 +7,28 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class PondScum {
-    private static int numRows = 0;
-    private static int numColumns = 0;
+    private int numRows;
+    private int numColumns;
 
-    public static void main(String[] args) {
-        //Determine configuration of pond
-        getPondConfiguration();
-        //Create grid according to configuration
-        createGrid();
-
-        //How to solve system of linear equations using matrix
-        double[][] lArray = {{4, -1} , {-1, 4}};
-        double[] rArray = {602, 1303};
-        Matrix A = new Matrix(lArray);
-        Matrix B = new Matrix(rArray, 2);
-        Matrix x = A.solve(B);
-        System.out.println(Arrays.deepToString(x.getArray()));
+    public PondScum() {
+        numRows = 0;
+        numColumns = 0;
     }
 
     /**
      * Method to determine number of rows/columns
      */
-    private static void getPondConfiguration() {
-        try(Scanner input = new Scanner(new File("src/example.txt"))) {
+    public void getPondConfiguration() {
+        try(Scanner input = new Scanner(new File("src/example2.txt"))) {
+            int numRows = 0;
             while (input.hasNextLine()) {
                 //If another line then add to num Rows
-                numRows++;
+                ++numRows;
+                setNumRows(numRows);
                 //Seperate values to determine num columns
                 String line = input.nextLine();
                 String[] stringValues = line.split(",");
-                numColumns = stringValues.length;
+                setNumColumns(stringValues.length);
             }
             System.out.println("Number of Rows = " + numRows + " Number of Columns = " + numColumns);
         }catch (FileNotFoundException e) {
@@ -47,11 +39,11 @@ public class PondScum {
     /**
      * Method to create grid layout to represent pond
      */
-    private static double[][] createGrid() {
+    public String[][] createGrid() {
         //Create grid to be returned
-        double[][] grid = new double[numRows][numColumns];
+        String[][] grid = new String[numRows][numColumns];
         //Scan through text file
-        try(Scanner input = new Scanner(new File("src/example.txt"))){
+        try(Scanner input = new Scanner(new File("src/example2.txt"))){
             int rowCount = 0;
             while(input.hasNextLine()) {
                 //Read each line and separate values
@@ -61,21 +53,65 @@ public class PondScum {
                 //Find variable height ponds
                 for (int i = 0; i < stringValues.length; i++) {
                     if(stringValues[i].charAt(0) == '!')
-                        stringValues[i] = "1";
+                        stringValues[i] = "!";
                 }
 
                 //Add values to grid in double form
                 for (int i = 0; i < stringValues.length; i++) {
-                    grid[rowCount][i] = Double.parseDouble(stringValues[i]);
+                    grid[rowCount][i] = stringValues[i];
                 }
                 rowCount++;
             }
             //Print out grid
-            System.out.println(Arrays.deepToString(grid));
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[i].length; j++) {
+                    System.out.printf("%15s", grid[i][j]);
+                }
+                System.out.println();
+            }
+//            System.out.println(Arrays.deepToString(grid));
         }catch (FileNotFoundException ex) {
             ex.getMessage();
         }
         return grid;
     }
 
+    public void getEquations(String[][] grid) {
+        ArrayList<String> equationValues = new ArrayList<>();
+        //Run through 2D array
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                //if value in grid = !
+                if(grid[i][j].equals("!")) {
+                    //North
+                    equationValues.add(grid[i-1][j]);
+                    //South
+                    equationValues.add(grid[i+1][j]);
+                    //East
+                    equationValues.add(grid[i][j-1]);
+                    //West
+                    equationValues.add(grid[i][j+1]);
+                }
+            }
+        }
+        //Iterate through equationValues
+        //
+        System.out.println(equationValues);
+    }
+
+    public void setNumRows(int numRows) {
+        this.numRows = numRows;
+    }
+
+    public void setNumColumns(int numColumns) {
+        this.numColumns = numColumns;
+    }
+
+    public int getNumRows() {
+        return numRows;
+    }
+
+    public int getNumColumns() {
+        return numColumns;
+    }
 }
