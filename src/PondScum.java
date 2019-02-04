@@ -2,6 +2,7 @@ import Jama.Matrix;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -12,7 +13,6 @@ public class PondScum {
     private int numRows;
     private int numColumns;
     private ArrayList<String> equationValues;
-    private ArrayList<Double> sumList;
 
 
     public PondScum(String filePath) {
@@ -20,7 +20,6 @@ public class PondScum {
         numRows = 0;
         numColumns = 0;
         equationValues = new ArrayList<>();
-        sumList = new ArrayList<>();
     }
 
     /**
@@ -109,25 +108,46 @@ public class PondScum {
     }
 
     /**
-     * Method to create equations from equation values
+     * Method to create A matrix for calculation
      */
-    public void getSums() {
+    public double[][] createMatrixA() {
+        int size = equationValues.size() / 4;
+        double[][] matrixA = new double[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (i == j)
+                    matrixA[i][j] = 4.0;
+                else
+                    matrixA[i][j] = -1.0;
+            }
+        }
+        System.out.println(Arrays.deepToString(matrixA));
+        return  matrixA;
+    }
+
+    /**
+     * Method to get sums of constant values
+     */
+    public double[] createMatrixB() {
+        double[] matrixB = new double[equationValues.size()/4];
+        int index = 0;
         int count = 1;
         double sum = 0.0;
         int maxVariables = 4;
         for(String value : equationValues) {
-            System.out.println(count);
             if (!value.equals("!")) {
                 sum += Double.parseDouble(value);
             }
             if (count / maxVariables == 1) {
-                sumList.add(sum);
+                matrixB[index] = sum;
+                index++;
                 sum = 0;
                 count = 0;
             }
             count++;
         }
-        System.out.println(sumList);
+        System.out.println("Sums = " + Arrays.toString(matrixB));
+        return matrixB;
     }
 
     public void setNumRows(int numRows) {
