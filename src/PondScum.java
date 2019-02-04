@@ -4,22 +4,30 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class PondScum {
+    private File file;
     private int numRows;
     private int numColumns;
+    private ArrayList<String> equationValues;
+    private ArrayList<Double> sumList;
 
-    public PondScum() {
+
+    public PondScum(String filePath) {
+        file = new File(filePath);
         numRows = 0;
         numColumns = 0;
+        equationValues = new ArrayList<>();
+        sumList = new ArrayList<>();
     }
 
     /**
      * Method to determine number of rows/columns
      */
     public void getPondConfiguration() {
-        try(Scanner input = new Scanner(new File("src/example2.txt"))) {
+        try(Scanner input = new Scanner(file)) {
             int numRows = 0;
             while (input.hasNextLine()) {
                 //If another line then add to num Rows
@@ -43,7 +51,7 @@ public class PondScum {
         //Create grid to be returned
         String[][] grid = new String[numRows][numColumns];
         //Scan through text file
-        try(Scanner input = new Scanner(new File("src/example2.txt"))){
+        try(Scanner input = new Scanner(file)){
             int rowCount = 0;
             while(input.hasNextLine()) {
                 //Read each line and separate values
@@ -76,8 +84,11 @@ public class PondScum {
         return grid;
     }
 
-    public void getEquations(String[][] grid) {
-        ArrayList<String> equationValues = new ArrayList<>();
+    /**
+     * Method to run through grid and find equation values
+     * @param grid 2D array representing pond configuration
+     */
+    public void getEquationValues(String[][] grid) {
         //Run through 2D array
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
@@ -94,9 +105,29 @@ public class PondScum {
                 }
             }
         }
-        //Iterate through equationValues
-        //
-        System.out.println(equationValues);
+        System.out.println("Number of equations = " + equationValues.size() / 4 + "\n" + equationValues);
+    }
+
+    /**
+     * Method to create equations from equation values
+     */
+    public void getSums() {
+        int count = 1;
+        double sum = 0.0;
+        int maxVariables = 4;
+        for(String value : equationValues) {
+            System.out.println(count);
+            if (!value.equals("!")) {
+                sum += Double.parseDouble(value);
+            }
+            if (count / maxVariables == 1) {
+                sumList.add(sum);
+                sum = 0;
+                count = 0;
+            }
+            count++;
+        }
+        System.out.println(sumList);
     }
 
     public void setNumRows(int numRows) {

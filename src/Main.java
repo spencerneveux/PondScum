@@ -4,13 +4,14 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        PondScum pondScum = new PondScum();
+        PondScum pondScum = new PondScum("src/example2.txt");
 
         //Determine configuration of pond
         pondScum.getPondConfiguration();
         //Create grid according to configuration
         String[][] grid = pondScum.createGrid();
-        pondScum.getEquations(grid);
+        pondScum.getEquationValues(grid);
+        pondScum.getSums();
 
         //How to solve system of linear equations using matrix
         double[][] lArray = {{4, -1} , {-1, 4}};
