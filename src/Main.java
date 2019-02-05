@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        PondScum pondScum = new PondScum("src/example.txt");
+        PondScum pondScum = new PondScum("src/example2.txt");
 
         //Determine configuration of pond
         pondScum.getPondConfiguration();
@@ -14,9 +14,10 @@ public class Main {
         pondScum.getEquationValues(grid);
         double[][] matrixA = pondScum.createMatrixA();
         double[] matrixB = pondScum.createMatrixB();
+        int numEquations = pondScum.getNumEquations();
 
         Matrix A = new Matrix(matrixA);
-        Matrix B = new Matrix(matrixB, 2);
+        Matrix B = new Matrix(matrixB, numEquations);
         Matrix x = A.solve(B);
         System.out.println("The solution is: " + Arrays.deepToString(x.getArray()));
 

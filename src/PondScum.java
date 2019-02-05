@@ -52,6 +52,7 @@ public class PondScum {
         //Scan through text file
         try(Scanner input = new Scanner(file)){
             int rowCount = 0;
+            int count = 1;
             while(input.hasNextLine()) {
                 //Read each line and separate values
                 String line = input.nextLine();
@@ -59,8 +60,10 @@ public class PondScum {
 
                 //Find variable height ponds
                 for (int i = 0; i < stringValues.length; i++) {
-                    if(stringValues[i].charAt(0) == '!')
-                        stringValues[i] = "!";
+                    if(stringValues[i].charAt(0) == '!') {
+                        stringValues[i] = "H" + count;
+                        count++;
+                    }
                 }
 
                 //Add values to grid in double form
@@ -88,11 +91,12 @@ public class PondScum {
      * @param grid 2D array representing pond configuration
      */
     public void getEquationValues(String[][] grid) {
+        int count = 1;
         //Run through 2D array
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
                 //if value in grid = !
-                if(grid[i][j].equals("!")) {
+                if(grid[i][j].equals("H" + count)) {
                     //North
                     equationValues.add(grid[i-1][j]);
                     //South
@@ -101,27 +105,51 @@ public class PondScum {
                     equationValues.add(grid[i][j-1]);
                     //West
                     equationValues.add(grid[i][j+1]);
+                    //increase count
+                    count++;
                 }
             }
         }
-        System.out.println("Number of equations = " + equationValues.size() / 4 + "\n" + equationValues);
+        System.out.println("Number of equations = " + getNumEquations() + "\n" + equationValues);
     }
 
     /**
      * Method to create A matrix for calculation
      */
     public double[][] createMatrixA() {
-        int size = equationValues.size() / 4;
+        int rowPosition = 0;
+        int equationCount = 1;
+        int size = getNumEquations();
         double[][] matrixA = new double[size][size];
+
+        // Iterate through 2D Matrix A
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
+                //Create Diagonal constant = 4
                 if (i == j)
                     matrixA[i][j] = 4.0;
-                else
-                    matrixA[i][j] = -1.0;
             }
         }
-        System.out.println(Arrays.deepToString(matrixA));
+
+        //Get variable position.
+        for (String value : equationValues) {
+            if (value.charAt(0) == 'H') {
+                int variable = value.charAt(1) - 48;
+                matrixA[rowPosition][variable-1] = -1.0;
+            }
+            if (equationCount == 4) {
+                equationCount = 0;
+                rowPosition++;
+            }
+            equationCount++;
+        }
+        //Print out A matrix
+        for (int i = 0; i < matrixA.length; i++) {
+            for (int j = 0; j < matrixA[i].length; j++) {
+                System.out.printf("%10s", matrixA[i][j]);
+            }
+            System.out.println();
+        }
         return  matrixA;
     }
 
@@ -129,13 +157,13 @@ public class PondScum {
      * Method to get sums of constant values
      */
     public double[] createMatrixB() {
-        double[] matrixB = new double[equationValues.size()/4];
+        double[] matrixB = new double[getNumEquations()];
         int index = 0;
         int count = 1;
         double sum = 0.0;
         int maxVariables = 4;
         for(String value : equationValues) {
-            if (!value.equals("!")) {
+            if (value.charAt(0) != ('H')) {
                 sum += Double.parseDouble(value);
             }
             if (count / maxVariables == 1) {
@@ -150,6 +178,7 @@ public class PondScum {
         return matrixB;
     }
 
+
     public void setNumRows(int numRows) {
         this.numRows = numRows;
     }
@@ -158,11 +187,8 @@ public class PondScum {
         this.numColumns = numColumns;
     }
 
-    public int getNumRows() {
-        return numRows;
-    }
-
-    public int getNumColumns() {
-        return numColumns;
+    public int getNumEquations() {
+        int maxNumVariables = 4;
+        return equationValues.size() / maxNumVariables;
     }
 }
