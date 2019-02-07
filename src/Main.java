@@ -1,4 +1,4 @@
-import Jama.Matrix;
+//import Jama.Matrix;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,17 +16,10 @@ public class Main {
         double[] matrixB = pondScum.createMatrixB();
         int numEquations = pondScum.getNumEquations();
 
-        Matrix A = new Matrix(matrixA);
-        Matrix B = new Matrix(matrixB, numEquations);
-        Matrix x = A.solve(B);
-        System.out.println("The solution is: " + Arrays.deepToString(x.getArray()));
 
-//        //How to solve system of linear equations using matrix
-//        double[][] lArray = {{4, -1} , {-1, 4}};
-//        double[] rArray = {602, 1303};
-//        Matrix A = new Matrix(lArray);
-//        Matrix B = new Matrix(rArray, 2);
-//        Matrix x = A.solve(B);
-//        System.out.println(Arrays.deepToString(x.getArray()));
+        Matrix solution = new Matrix(matrixA, matrixB);
+        solution.solve();
+        System.out.println(solution.toString());
+
     }
 }
