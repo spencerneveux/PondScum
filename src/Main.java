@@ -12,14 +12,12 @@ public class Main {
         //Create grid according to configuration
         String[][] grid = pondScum.createGrid();
         pondScum.getEquationValues(grid);
+
         double[][] matrixA = pondScum.createMatrixA();
         double[] matrixB = pondScum.createMatrixB();
-        int numEquations = pondScum.getNumEquations();
-
 
         Matrix solution = new Matrix(matrixA, matrixB);
         solution.solve();
         System.out.println(solution.toString());
-
     }
 }

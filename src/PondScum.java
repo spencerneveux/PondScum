@@ -79,7 +79,6 @@ public class PondScum {
                 }
                 System.out.println();
             }
-//            System.out.println(Arrays.deepToString(grid));
         }catch (FileNotFoundException ex) {
             ex.getMessage();
         }
