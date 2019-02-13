@@ -19,5 +19,6 @@ public class Main {
         Matrix solution = new Matrix(matrixA, matrixB);
         solution.solve();
         System.out.println(solution.toString());
+        pondScum.export(grid, solution.getResults());
     }
 }

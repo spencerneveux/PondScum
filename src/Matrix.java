@@ -67,6 +67,10 @@ public class Matrix {
         }
     }
 
+    public Fraction[] getResults() {
+        return fractionMatrixB;
+    }
+
     public void populateMatrixB(double[] matrixB) {
         for (int i = 0; i < matrixB.length; i++) {
             fractionMatrixB[i] = new Fraction((int)matrixB[i]);

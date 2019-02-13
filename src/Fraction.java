@@ -26,16 +26,12 @@ public class Fraction {
     public Fraction multiply(Fraction other) {
         BigInteger n = numerator.multiply(other.numerator);
         BigInteger d = denominator.multiply(other.denominator);
-//        int n = numerator * other.numerator;
-//        int d = denominator * other.denominator;
         return new Fraction(n, d);
     }
 
     public Fraction divide(Fraction other) {
         BigInteger n = numerator.multiply(other.denominator);
         BigInteger d = denominator.multiply(other.numerator);
-//        int n = numerator * other.denominator;
-//        int d = denominator * other.numerator;
         return new Fraction(n, d);
     }
 

@@ -1,12 +1,10 @@
-import Jama.Matrix;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Scanner;
+import java.util.StringJoiner;
 
 public class PondScum {
     private File file;
@@ -66,7 +64,7 @@ public class PondScum {
                     }
                 }
 
-                //Add values to grid in double form
+                //Add values to grid
                 for (int i = 0; i < stringValues.length; i++) {
                     grid[rowCount][i] = stringValues[i];
                 }
@@ -177,7 +175,6 @@ public class PondScum {
         return matrixB;
     }
 
-
     public void setNumRows(int numRows) {
         this.numRows = numRows;
     }
@@ -189,5 +186,34 @@ public class PondScum {
     public int getNumEquations() {
         int maxNumVariables = 4;
         return equationValues.size() / maxNumVariables;
+    }
+
+    public void export(String[][] grid, Fraction[] results) {
+        int count = 0;
+        int commaCounter = 0;
+        try (PrintWriter out = new PrintWriter(new File("pondscum.txt"))) {
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[0].length; j++) {
+
+                    //If pond is variable, fill out it's height with appropriate result
+                    if (grid[i][j].charAt(0) == 'H') {
+                        grid[i][j] = results[count].toString();
+                        count++;
+                    }
+                    if (commaCounter != grid[0].length-1) {
+                        out.print(grid[i][j] + ",");
+                        commaCounter++;
+                    }
+                    else {
+                        out.print(grid[i][j]);
+                        commaCounter = 0;
+                    }
+                }
+                out.println();
+            }
+        }catch (FileNotFoundException e) {
+            e.getMessage();
+        }
+
     }
 }
