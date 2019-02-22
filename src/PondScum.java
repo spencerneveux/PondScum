@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.StringJoiner;
 
 public class PondScum {
     private File file;

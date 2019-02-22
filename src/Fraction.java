@@ -17,6 +17,12 @@ public class Fraction {
         denominator = denominator.divide(g);
     }
 
+    public Fraction add(Fraction other) {
+        BigInteger n = numerator.multiply(other.denominator).add(other.numerator.multiply(denominator));
+        BigInteger d = denominator.multiply(other.denominator);
+        return new Fraction(n, d);
+    }
+
     public Fraction subtract(Fraction other) {
         BigInteger n = numerator.multiply(other.denominator).subtract(other.numerator.multiply(denominator));
         BigInteger d = denominator.multiply(other.denominator);
